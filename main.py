@@ -1,83 +1,43 @@
-# main.py
 """
-方格王国 (Grid Kingdom) 主入口
+方格王国 (Grid Kingdom) - 主程序入口
+该模块是游戏的入口点，负责初始化日志系统和启动游戏引擎。
 """
-import pygame
+import os
 import sys
 import logging
-from core.grid_manager import GridManager
-from core.event_handler import EventHandler
-from rendering.renderer import Renderer
-from utils.constants import WINDOW_WIDTH, WINDOW_HEIGHT, GRID_ROWS, GRID_COLS
-from utils.logger import setup_logger
+import argparse
+from src.utils.logger import setup_logger
+from src.core.engine import GameEngine
 
-# 设置日志系统
-logger = setup_logger()
+def parse_args():
+    """解析命令行参数"""
+    parser = argparse.ArgumentParser(description="方格王国 - 策略性方格世界建造游戏")
+    parser.add_argument("--debug", action="store_true", help="启用调试模式")
+    parser.add_argument("--no-log-file", action="store_true", help="禁用日志文件")
+    return parser.parse_args()
 
-class Game:
-    """
-    游戏主类，负责初始化和运行游戏
-    """
-    def __init__(self):
-        """
-        初始化游戏
-        """
-        # 初始化Pygame
-        pygame.init()
-        
-        # 创建游戏窗口
-        self.screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-        pygame.display.set_caption("方格王国 (Grid Kingdom)")
-        
-        # 创建时钟对象，用于控制游戏帧率
-        self.clock = pygame.time.Clock()
-        
-        # 初始化网格管理器
-        self.grid_manager = GridManager(GRID_ROWS, GRID_COLS)
-        
-        # 初始化事件处理器
-        self.event_handler = EventHandler(self.grid_manager)
-        
-        # 初始化渲染器
-        self.renderer = Renderer(self.screen, self.grid_manager)
-        
-        # 游戏运行标志
-        self.running = True
-        
-        logger.info("游戏初始化完成")
+def main():
+    """游戏主函数入口"""
+    # 解析命令行参数
+    args = parse_args()
     
-    def run(self):
-        """
-        游戏主循环
-        """
-        logger.info("游戏开始运行")
-        
-        while self.running:
-            # 处理事件
-            self.running = self.event_handler.handle_events()
-            
-            # 更新游戏状态
-            self.update()
-            
-            # 渲染游戏画面
-            self.renderer.render()
-            
-            # 更新显示
-            pygame.display.flip()
-            
-            # 控制帧率为60FPS
-            self.clock.tick(60)
-        
-        # 退出游戏
-        pygame.quit()
-        sys.exit()
+    # 设置日志级别
+    log_level = logging.DEBUG if args.debug else logging.INFO
     
-    def update(self):
-        """
-        更新游戏状态
-        """
-        pass
+    # 设置日志系统
+    logger = setup_logger(log_level=log_level, log_to_file=not args.no_log_file)
+    logger.info("方格王国游戏启动中...")
+    
+    try:
+        # 创建并启动游戏引擎
+        engine = GameEngine()
+        return engine.run()
+    except KeyboardInterrupt:
+        logger.info("用户中断游戏")
+        return 0
+    except Exception as e:
+        logger.error(f"游戏运行出错: {e}", exc_info=True)
+        return 1
 
 if __name__ == "__main__":
-    game = Game()
-    game.run()
+    sys.exit(main())
