@@ -11,66 +11,70 @@
 - **极简主义UI设计** - 符号化界面呈现核心信息（注：没有美工哭哭）
 
 ## 项目结构
-grid_kingdom/
+Grid-Kingdom/ (项目根目录)
+├── grid_kingdom/       # 主要的游戏逻辑包 (Python Package)
+│   ├── core/            # 核心系统 (游戏引擎, 状态机, 事件管理器, 配置等)
+│   │   ├── init.py
+│   │   ├── engine.py     # 游戏主循环 (处理输入, 更新游戏状态, 渲染)
+│   │   ├── game_state_manager.py # 状态机管理游戏状态
+│   │   ├── event_manager.py # 事件管理器 (处理游戏内事件)
+│   │   └── config_loader.py # 配置加载器 (加载游戏设置)
+│   │
+│   ├── game_objects/    # 游戏内实体对象 (地块, 建筑, 插件, 卡牌等)
+│   │   ├── init.py
+│   │   ├── tile.py       # 地块类 (包含位置, 类型, 功能等)
+│   │   ├── building.py   # 建筑类 (包含属性, 功能, 插件等)
+│   │   ├── plugin.py     # 插件类 (包含功能, 效果等)
+│   │   └── card.py       # 卡牌类 (包含属性, 效果等)
+│   │
+│   ├── systems/         # 负责具体游戏逻辑的系统 (资源, 生产, 科研, UI管理等)
+│   │   ├── init.py
+│   │   ├── resource_system.py # 资源管理系统
+│   │   ├── production_system.py # 生产管理系统
+│   │   ├── card_system.py # 卡牌管理系统
+│   │   ├── research_system.py # 科研管理系统
+│   │   ├── turn_system.py # 回合管理系统
+│   │   └── random_event_system.py # 随机事件系统
+│   │
+│   ├── ui/               # 用户界面相关 (渲染, UI元素, 屏幕管理)
+│   │   ├── init.py        
+│   │   ├── renderer.py    # 渲染器
+│   │   ├── ui_manager.py  # UI管理器
+│   │   ├── screens/       # 不同的游戏屏幕 (主菜单, 游戏界面, 游戏结束等)
+│   │   └── components/    # 可重用的UI组件 (按钮, 标签, 进度条等)
+│   │
+│   ├── utils/           # 通用工具函数、常量、枚举等
+│   │   ├── init.py
+│   │   ├── constants.py  # 常量定义 (如颜色, 资源类型等)
+│   │   ├── enums.py      # 枚举定义 (如地块类型, 卡牌类型等)
+│   │   ├── logger.py     # 日志工具 (用于记录游戏运行信息)
+│   │   └── helpers.py    # 辅助函数 (如坐标转换, 资源计算等)
+│   │
+│   └── factory/         # 对象创建工厂 (用于解耦对象的创建逻辑)
+│       ├── init.py
+│       ├── entity_factory.py # 实体对象工厂
 │
-├── assets/              # 游戏资源文件
-│   ├── images/          # 图像资源
-│   ├── sounds/          # 音效资源
-│   └── data/            # 游戏数据定义(JSON/CSV)
+├── assets/             # 游戏媒体资源 (图片, 声音, 字体)
+│   ├── images/
+│   ├── sounds/
+│   ├── fonts/
 │
-├── src/                 # 源代码
-│   ├── core/            # 核心系统
-│   │   ├── __init__.py
-│   │   ├── engine.py    # 游戏引擎
-│   │   ├── game_state.py # 游戏状态管理
-│   │   ├── event_manager.py # 事件管理
-│   │   └── config.py    # 配置管理
-│   │
-│   ├── game_objects/    # 游戏对象
-│   │   ├── __init__.py
-│   │   ├── tile.py      # 地块类
-│   │   ├── building.py  # 建筑基类及子类
-│   │   ├── plugin.py    # 插件基类及子类
-│   │   └── card.py      # 卡牌基类及子类
-│   │
-│   ├── systems/         # 游戏系统
-│   │   ├── __init__.py
-│   │   ├── resource_system.py  # 资源系统
-│   │   ├── card_system.py      # 卡牌系统
-│   │   ├── research_system.py  # 科研系统
-│   │   ├── round_system.py     # 回合系统
-│   │   ├── event_system.py     # 事件系统
-│   │   └── grid_system.py      # 网格系统
-│   │
-│   ├── ui/              # 用户界面
-│   │   ├── __init__.py
-│   │   ├── renderer.py  # 渲染器
-│   │   ├── ui_manager.py # UI管理器
-│   │   ├── screens/     # 不同场景界面
-│   │   └── components/  # UI组件
-│   │
-│   ├── utils/           # 工具函数
-│   │   ├── __init__.py
-│   │   ├── constants.py # 常量定义
-│   │   ├── logger.py    # 日志工具
-│   │   └── helpers.py   # 辅助函数
-│   │
-│   └── factory/         # 工厂类
-│       ├── __init__.py
-│       ├── building_factory.py # 建筑工厂
-│       ├── card_factory.py     # 卡牌工厂
-│       └── plugin_factory.py   # 插件工厂
+├── data/               # 游戏数据定义 (JSON, CSV) - 如卡牌属性, 建筑参数等
+│   ├── cards/          # 卡牌数据
+│   ├── buildings/      # 建筑数据
+│   ├── plugins/        # 插件数据
+│   └── events/         # 事件数据
 │
-├── tests/               # 单元测试
-│   ├── __init__.py
-│   ├── test_core/
-│   ├── test_game_objects/
-│   └── test_systems/
+├── tests/              # 单元测试和集成测试
+│   ├── init.py
+│   ├── test_core/       # 测试核心系统
+│   ├── test_game_objects/ # 测试游戏对象
+│   └── test_systems/    # 测试游戏系统
 │
-├── main.py              # 游戏入口
-├── requirements.txt     # 依赖列表
-├── setup.py             # 安装脚本
-└── README.md            # 项目说明
+├── main.py             # 游戏主入口脚本
+├── requirements.txt    # Python依赖列表
+├── .gitignore          # Git忽略文件配置
+└── README.md           # 本文件
 
 ## 玩法简介
 在《方格王国》中，您将扮演一位雄心勃勃的王国建造者。从一片空白的方格土地开始，您需要：

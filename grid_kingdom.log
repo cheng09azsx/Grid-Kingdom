@@ -1,0 +1,25 @@
+2025-05-15 00:57:32 - DEBUG - GridKingdom - [logger.py:62] - 日志模块测试：这是一条 DEBUG 信息。
+2025-05-15 00:57:32 - INFO - GridKingdom - [logger.py:63] - 日志模块测试：这是一条 INFO 信息。
+2025-05-15 00:57:32 - WARNING - GridKingdom - [logger.py:64] - 日志模块测试：这是一条 WARNING 信息。
+2025-05-15 00:57:32 - ERROR - GridKingdom - [logger.py:65] - 日志模块测试：这是一条 ERROR 信息。
+2025-05-15 00:57:32 - CRITICAL - GridKingdom - [logger.py:66] - 日志模块测试：这是一条 CRITICAL 信息。
+2025-05-15 00:57:32 - ERROR - GridKingdom - [logger.py:71] - 日志模块测试：捕获到一个异常！
+Traceback (most recent call last):
+  File "d:\cilizhaiDownload\Grid-Kingdom\grid_kingdom\utils\logger.py", line 69, in <module>
+    x = 1 / 0
+        ~~^~~
+ZeroDivisionError: division by zero
+2025-05-15 01:00:33 - INFO - GridKingdom - [main.py:10] - Application starting...
+2025-05-15 01:00:34 - INFO - GridKingdom - [engine.py:23] - Pygame initialized.
+2025-05-15 01:00:34 - INFO - GridKingdom - [engine.py:27] - Display mode set to 1280x720.
+2025-05-15 01:00:34 - INFO - GridKingdom - [game_state_manager.py:47] - GameStateManager initialized.
+2025-05-15 01:00:34 - INFO - GridKingdom - [game_state_manager.py:58] - State class '<lambda>' registered as 'start_menu'.
+2025-05-15 01:00:34 - INFO - GridKingdom - [game_state_manager.py:58] - State class '<lambda>' registered as 'game_main'.
+2025-05-15 01:00:34 - ERROR - GridKingdom - [game_state_manager.py:84] - Cannot activate state 'start_menu'. It's not a valid state class or instance.
+2025-05-15 01:00:34 - INFO - GridKingdom - [engine.py:35] - GameEngine initialized.
+2025-05-15 01:00:34 - INFO - GridKingdom - [engine.py:85] - Starting game loop...
+2025-05-15 01:00:36 - INFO - GridKingdom - [engine.py:57] - QUIT event received, stopping game.
+2025-05-15 01:00:36 - INFO - GridKingdom - [engine.py:93] - Game loop finished.
+2025-05-15 01:00:36 - INFO - GridKingdom - [engine.py:98] - Quitting Pygame...
+2025-05-15 01:00:36 - INFO - GridKingdom - [engine.py:100] - Pygame quit successfully.
+2025-05-15 01:00:36 - INFO - GridKingdom - [main.py:19] - Application shutting down.

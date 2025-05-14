@@ -1,43 +1,22 @@
+# file/main.py
 """
-方格王国 (Grid Kingdom) - 主程序入口
-该模块是游戏的入口点，负责初始化日志系统和启动游戏引擎。
+游戏主入口点。
 """
-import os
-import sys
-import logging
-import argparse
-from src.utils.logger import setup_logger
-from src.core.engine import GameEngine
-
-def parse_args():
-    """解析命令行参数"""
-    parser = argparse.ArgumentParser(description="方格王国 - 策略性方格世界建造游戏")
-    parser.add_argument("--debug", action="store_true", help="启用调试模式")
-    parser.add_argument("--no-log-file", action="store_true", help="禁用日志文件")
-    return parser.parse_args()
+from grid_kingdom.core.engine import GameEngine
+from grid_kingdom.utils.logger import logger # 确保日志在最早被初始化和使用
 
 def main():
-    """游戏主函数入口"""
-    # 解析命令行参数
-    args = parse_args()
-    
-    # 设置日志级别
-    log_level = logging.DEBUG if args.debug else logging.INFO
-    
-    # 设置日志系统
-    logger = setup_logger(log_level=log_level, log_to_file=not args.no_log_file)
-    logger.info("方格王国游戏启动中...")
-    
+    """主函数，创建并运行游戏引擎。"""
+    logger.info("Application starting...")
     try:
-        # 创建并启动游戏引擎
         engine = GameEngine()
-        return engine.run()
-    except KeyboardInterrupt:
-        logger.info("用户中断游戏")
-        return 0
+        engine.run()
     except Exception as e:
-        logger.error(f"游戏运行出错: {e}", exc_info=True)
-        return 1
+        logger.critical("An unhandled exception occurred in the_game engine!", exc_info=True)
+        # exc_info=True 会记录完整的堆栈跟踪
+        # 在生产环境中，可能需要更优雅的错误报告方式
+    finally:
+        logger.info("Application shutting down.")
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()
