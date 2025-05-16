@@ -18,7 +18,7 @@ ENABLE_CONSOLE_LOGGING = True # 是否启用控制台日志记录
 # --- Logger实例 ---
 # 获取根logger或者一个特定的logger，这里我们使用模块名作为logger名
 # 如果在不同模块使用相同的logger_name，它们会共享配置
-# 通常一个应用使用一个主logger，或者按模块划分logger
+# 通常一个应用使用一个主logger，或者模块划分logger
 logger = logging.getLogger("GridKingdom")
 logger.setLevel(LOG_LEVEL) # 设置logger处理的最低级别
 

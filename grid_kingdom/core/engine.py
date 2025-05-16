@@ -5,7 +5,8 @@
 """
 import pygame
 from grid_kingdom.utils.logger import logger
-from grid_kingdom.core.game_state_manager import GameStateManager, PlaceholderState # 导入示例状态
+from grid_kingdom.core.game_state_manager import GameStateManager, PlaceholderState, GameMainState 
+from grid_kingdom.utils import constants as C
 
 # --- 游戏常量 (后续可以移到config或constants模块) ---
 SCREEN_WIDTH = 1280
@@ -14,40 +15,54 @@ FPS = 60
 WINDOW_TITLE = "方格王国 (Grid Kingdom) - Alpha v0.0.1"
 
 class GameEngine:
-    """
-    游戏引擎类，封装了Pygame的初始化和主循环。
-    """
     def __init__(self):
-        pygame.init() # 初始化所有Pygame模块
-        pygame.font.init() # 确保字体模块已初始化 (有时pygame.init()不够)
+        pygame.init()
+        pygame.font.init()
         logger.info("Pygame initialized.")
 
-        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-        pygame.display.set_caption(WINDOW_TITLE)
-        logger.info(f"Display mode set to {SCREEN_WIDTH}x{SCREEN_HEIGHT}.")
+        self.screen = pygame.display.set_mode((C.SCREEN_WIDTH, C.SCREEN_HEIGHT))
+        pygame.display.set_caption(C.WINDOW_TITLE) # 使用常量中的中文标题
+        logger.info(f"Display mode set to {C.SCREEN_WIDTH}x{C.SCREEN_HEIGHT}.")
 
         self.clock = pygame.time.Clock()
         self.running = False
 
         self.state_manager = GameStateManager()
-        self._register_initial_states() # 注册初始状态
+        # 将自身引用传递给 state_manager，以便状态可以访问 engine 的属性 (如 screen)
+        # 这是一种简单的依赖注入形式，更好的方式可能是在 change_state 时传递必要参数
+        # 或者让状态直接从全局配置/引擎实例中获取所需信息
+        setattr(self.state_manager, 'engine_ref', self) 
+
+        self._register_initial_states()
 
         logger.info("GameEngine initialized.")
 
     def _register_initial_states(self) -> None:
-        """注册游戏启动时需要的状态。"""
-        # 注册我们的占位符状态
+        logger.debug("Registering initial states...")
+        
+        def create_start_menu_state(manager_instance):
+            return PlaceholderState(manager_instance, color=(50, 50, 150), text="Start Screen (Press SPACE to play)")
+
+        # 我们不再需要第二个 PlaceholderState，而是使用 GameMainState
+        # def create_game_main_state_placeholder(manager_instance):
+        #     return PlaceholderState(manager_instance, color=(50, 150, 50), text="Game Main State (Press SPACE for menu)")
+
         self.state_manager.register_state(
             "start_menu",
-            lambda manager: PlaceholderState(manager, color=(50, 50, 150), text="Start Screen (Press SPACE to play)")
+            create_start_menu_state
         )
+        # 注册我们新的主游戏状态
         self.state_manager.register_state(
             "game_main",
-            lambda manager: PlaceholderState(manager, color=(50, 150, 50), text="Game Main State (Press SPACE for menu)")
+            GameMainState #直接传递类，让GameStateManager在切换时实例化
         )
-        # 游戏启动时进入开始菜单
+        
+        logger.debug("Initial states registered. Attempting to change to 'start_menu'.")
         self.state_manager.change_state("start_menu", initial_message="Welcome to Grid Kingdom!")
-
+        if not self.state_manager.get_active_state():
+            logger.critical("CRITICAL: GameStateManager has no active state after initial change_state call!")
+        else:
+            logger.info(f"Initial active state set to: {self.state_manager.active_state_name}")
 
     def _handle_events(self) -> None:
         """处理Pygame事件队列。"""
@@ -98,4 +113,3 @@ class GameEngine:
         logger.info("Quitting Pygame...")
         pygame.quit()
         logger.info("Pygame quit successfully.")
-

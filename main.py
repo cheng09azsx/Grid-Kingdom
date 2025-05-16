@@ -1,4 +1,4 @@
-# file/main.py
+# /main.py
 """
 游戏主入口点。
 """
